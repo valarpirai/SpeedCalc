@@ -42,6 +42,10 @@ class SpeedViewController: UIViewController, CLLocationManagerDelegate {
         SpeedText.userInteractionEnabled = true
         SpeedText.addGestureRecognizer(tap)
         
+        tap = UITapGestureRecognizer(target: self, action: #selector(SpeedViewController.shareAddress))
+        addressLabel.userInteractionEnabled = true
+        addressLabel.addGestureRecognizer(tap)
+        
         SpeedText.text = String(format: "%.0f", mileToKm(speed));
         addressLabel.text = "";
         
@@ -105,6 +109,35 @@ class SpeedViewController: UIViewController, CLLocationManagerDelegate {
             
         })
     
+    }
+    
+    func shareAddress() {
+//        let shareText = "Hello, world!"
+        let addressText = self.addressLabel.text
+        
+        let activityViewController : UIActivityViewController = UIActivityViewController(
+            activityItems: [addressText!], applicationActivities: nil)
+        
+        // This lines is for the popover you need to show in iPad
+//        activityViewController.popoverPresentationController?.sourceView = (sender as! UIButton)
+        
+        // This line remove the arrow of the popover to show in iPad
+        activityViewController.popoverPresentationController?.permittedArrowDirections = UIPopoverArrowDirection()
+        activityViewController.popoverPresentationController?.sourceRect = CGRect(x: 150, y: 150, width: 0, height: 0)
+        
+        // Anything you want to exclude
+        activityViewController.excludedActivityTypes = [
+            UIActivityTypePostToWeibo,
+            UIActivityTypePrint,
+            UIActivityTypeAssignToContact,
+            UIActivityTypeSaveToCameraRoll,
+            UIActivityTypeAddToReadingList,
+            UIActivityTypePostToFlickr,
+            UIActivityTypePostToVimeo,
+            UIActivityTypePostToTencentWeibo
+        ]
+        
+        self.presentViewController(activityViewController, animated: true, completion: nil)
     }
     
     func changeSpeedFormat() {
